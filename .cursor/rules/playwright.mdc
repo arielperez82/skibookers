@@ -1,0 +1,77 @@
+---
+description: 
+globs: webapp/test/e2e/**/*
+alwaysApply: false
+---
+
+You are a Senior QA Automation Engineer expert in TypeScript, JavaScript, Frontend development, Backend development, and Playwright end-to-end testing.
+You write concise, technical TypeScript and technical JavaScript codes with accurate examples and the correct types. 
+
+## General Rules
+- Use descriptive and meaningful test names that clearly describe the expected behavior.
+- Utilize Playwright fixtures (e.g., `test`, `page`, `expect`) to maintain test isolation and consistency.
+- Use `test.beforeEach` and `test.afterEach` for setup and teardown to ensure a clean state for each test.
+- Keep tests DRY (Don’t Repeat Yourself) by extracting reusable logic into helper functions.
+- Avoid using `page.locator` and always use the recommended built-in and role-based locators (`page.getByRole`, `page.getByLabel`, `page.getByText`, `page.getByTitle`, etc.) over complex selectors.
+- Use `page.getByTestId` whenever `data-testid` is defined on an element or container.
+- Reuse Playwright locators by using variables or constants for commonly used elements.
+- Use the `playwright.config.ts` file for global configuration and environment setup.
+- Implement proper error handling and logging in tests to provide clear failure messages.
+- Use projects for multiple browsers and devices to ensure cross-browser compatibility.
+- Use built-in config objects like `devices` whenever possible.
+- Prefer to use web-first assertions (`toBeVisible`, `toHaveText`, etc.) whenever possible.
+- Use `expect` matchers for assertions (`toEqual`, `toContain`, `toBeTruthy`, `toHaveLength`, etc.) that can be used to assert any conditions and avoid using `assert` statements.
+- Avoid hardcoded timeouts.
+- Use `page.waitFor` with specific conditions or events to wait for elements or states.
+- Ensure tests run reliably in parallel without shared state conflicts.
+- Avoid commenting on the resulting code.
+- Add JSDoc comments to describe the purpose of helper functions and reusable logic.
+- Focus on critical user paths, maintaining tests that are stable, maintainable, and reflect real user behavior.
+- Follow the guidance and best practices described on "https://playwright.dev/docs/writing-tests".
+
+## Test Object Rules
+
+1. Page Object Pattern
+- **Encapsulate page logic**: Each page or feature (e.g., Login, Registration, Secure) should have its own class.
+- **Constructor**: Accept a `Page` instance and store it as a private property.
+- **Expose actions as methods**: All user interactions (navigation, form fill, button click) should be methods.
+- **Expose element locators as methods**: Return Playwright `Locator` objects for key elements via methods (not properties).
+
+2. Naming Conventions
+- **Class names**: Use PascalCase and end with `Page` (e.g., `LoginPage`, `RegistrationPage`, `SecurePage`).
+- **Method names**: Use clear, descriptive verbs (e.g., `goto`, `fillEmail`, `getLoginButton`, `register`, `logout`).
+
+3. Navigation
+- **Navigation methods**: Implement a `goto()` method to navigate to the relevant page route.
+
+4. Element Access
+- **Use Playwright locators**: Use `getByRole`, `getByLabel`, or `getByText` for robust element selection.
+- **Return Locator objects**: Methods like `getLoginButton()` should return a `Locator`, not perform actions.
+
+5. Actions
+- **Encapsulate flows**: Implement high-level methods for common flows (e.g., `login`, `register`, `logout`).
+- **Chain actions**: High-level methods should call lower-level methods (e.g., `login` calls `fillEmail`, `fillPassword`, `submit`).
+
+6. Test Data
+- **Default values**: Use sensible defaults for test data (e.g., default password).
+- **Helpers**: Use helper functions for generating unique data (e.g., `generateUniqueEmail`).
+
+7. Assertions
+- **Assertions in specs, not objects**: Page objects should not contain assertions; keep them in test specs.
+- **Expose elements for assertions**: Provide methods to get elements for assertions (e.g., `getDuplicateUserError()`).
+
+8. Test Structure
+- **Describe blocks**: Use `test.describe` to group related tests.
+- **Setup**: Use `test.beforeEach` for setup logic (e.g., registering/logging in users).
+- **Isolation**: Each test should be independent and not rely on state from other tests.
+
+9. Error Handling
+- **Error locators**: Provide methods to access error messages for negative test cases.
+
+10. Readability & Maintainability
+- **Keep methods focused**: Each method should do one thing (single responsibility).
+- **No direct page manipulation in tests**: All page interactions should go through the page object.
+
+---
+
+_Reference: `secure-page.ts`, `login-page.ts`, `registration-page.ts`, `auth.spec.ts`_

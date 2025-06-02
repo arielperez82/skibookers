@@ -1,0 +1,115 @@
+---
+description: Next.js with TypeScript and Tailwind UI best practices
+globs: **/*.tsx
+alwaysApply: false
+---
+
+# Next.js Best Practices
+
+# Bootstrap
+- Use `pnpm` instead of `npm` for dependencies
+
+## Project Structure
+- The entire webapp should be under a `/webapp` directory at the root of the project. All `next` and/or webapp related commands should be executed in that directory.
+- Use the App Router directory structure
+- Place components in `app` directory for route-specific components
+- Place shared components in `components` directory
+- Place utilities and helpers in `lib` directory
+- Use lowercase with dashes for directories (e.g., `components/auth-wizard`)
+
+## Components
+- Use Server Components by default
+- Mark client components explicitly with 'use client'
+- Wrap client components in Suspense with fallback
+- Use dynamic loading for non-critical components
+- Implement proper error boundaries
+- Place static content and interfaces at file end
+
+## Performance
+- Optimize images: Use WebP format, size data, lazy loading
+- Minimize use of 'useEffect' and 'setState'
+- Favor Server Components (RSC) where possible
+- Use dynamic loading for non-critical components
+- Implement proper caching strategies
+
+## Data Fetching
+- Use Server Components for data fetching when possible
+- Implement proper error handling for data fetching
+- Use appropriate caching strategies
+- Handle loading and error states appropriately
+
+## Routing
+- Use the App Router conventions
+- Implement proper loading and error states for routes
+- Use dynamic routes appropriately
+- Handle parallel routes when needed
+
+## Forms and Validation
+- Use Zod for form validation
+- Implement proper server-side validation
+- Handle form errors appropriately
+- Show loading states during form submission
+
+## State Management
+- Minimize client-side state
+- Use React Context sparingly
+- Prefer server state when possible
+- Implement proper loading states
+
+## Rules for Handling `params` and `searchParams` in Next.js 15 Dynamic Routes
+1. **Always Treat `params` and `searchParams` as Promises**
+   - In all dynamic route handlers (e.g., `page.tsx`, `layout.tsx`, API routes), assume that `params` and `searchParams` are Promises, not plain objects.
+2. **Await Before Access**
+   - Never access properties directly from `params` or `searchParams` (e.g., `params.bundleId`).
+   - Always `await` the Promise first:
+     ```tsx
+     const { bundleId } = await params;
+     ```
+   - If you need multiple properties, destructure them after awaiting.
+3. **Update Function Signatures**
+   - Type `params` and `searchParams` as Promises in function signatures:
+     ```tsx
+     export default async function Page({ params }: { params: Promise<{ bundleId: string }> }) { ... }
+     ```
+4. **Client Components Must Use React’s `use()` Hook**
+   - In Client Components, use the `use()` hook to unwrap the Promise:
+     ```tsx
+     'use client';
+     import { use } from 'react';
+
+     export default function Page({ params }: { params: Promise<{ bundleId: string }> }) {
+       const { bundleId } = use(params);
+       // ...
+     }
+     ```
+5. **Never Access Properties of Unawaited Promises**
+   - Do not write code like `params.bundleId` or `searchParams.get('foo')` without first awaiting or using `use()`.
+6. **Apply to All Dynamic Routes**
+   - These rules apply to all files in `app/` that receive dynamic route parameters, including nested routes.
+7. **Review and Refactor Legacy Code**
+   - When updating existing codebases, refactor any synchronous access of `params` or `searchParams` to follow these rules.
+---
+
+### Example: Correct Usage
+
+```tsx
+// Server Component
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <div>ID: {id}</div>;
+}
+
+// Client Component
+'use client';
+import { use } from 'react';
+
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  return <div>ID: {id}</div>;
+}
+```
+---
+
+**Failure to follow these rules will result in runtime errors and broken routes.**
+
+

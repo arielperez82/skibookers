@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@auth/*": ["./src/packages/auth/*"],
+      "@booking/*": ["./src/packages/booking/*"],
+      "@bundle-management/*": ["./src/packages/bundle-management/*"],
+      "@confirmation/*": ["./src/packages/confirmation/*"],
+      "@personalization/*": ["./src/packages/personalization/*"],
+      "@resort-discovery/*": ["./src/packages/resort-discovery/*"],
+      "@shared/*": ["./src/packages/shared/*"],
+      "@webapp/*": ["./src/*"],
+      "@test/*": ["./test/*"],
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
