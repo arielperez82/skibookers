@@ -1,8 +1,0 @@
-ignoredBuiltDependencies:
-  - '@tailwindcss/oxide'
-  - supabase
-  - unrs-resolver
-
-onlyBuiltDependencies:
-  - core-js
-  - sharp
